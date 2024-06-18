@@ -18,15 +18,15 @@ def access_websites_in_loop_with_curl(urls):
             result = subprocess.run(["curl", "-s", "-o", "/dev/null", "-w", "%{http_code}", "-L", "-A", "Mozilla/5.0", url], capture_output=True, text=True)
             status_code = int(result.stdout.strip())
             if status_code == 200:
-                print(f"Accessed {url} successfully")
+                print("Accessed {} successfully".format(url))
             elif status_code == 301:
-                print(f"Failed to access {url}. Status code: {status_code} (Moved Permanently)")
+                print("Failed to access {}. Status code: {} (Moved Permanently)".format(url, status_code))
             elif status_code == 403:
-                print(f"Failed to access {url}. Status code: {status_code} (Forbidden)")
+                print("Failed to access {}. Status code: {} (Forbidden)".format(url, status_code))
             else:
-                print(f"Failed to access {url}. Status code: {status_code}")
+                print("Failed to access {}. Status code: {}".format(url, status_code))
         except subprocess.CalledProcessError as e:
-            print(f"Failed to access {url}. Error: {e}")
+            print("Failed to access {}. Error: {}".format(url, e))
 
         index = (index + 1) % len(urls)  # Move to the next URL, looping back to the start if at the end
 
