@@ -1,0 +1,30 @@
+import requests
+
+def read_urls_from_file(filename):
+    urls = []
+    with open(filename, 'r') as file:
+        for line in file:
+            url = line.strip()
+            if url:
+                urls.append(url)
+    return urls
+
+def access_websites_in_loop(urls):
+    index = 0
+    while True:
+        url = urls[index]
+        try:
+            response = requests.get(url)
+            if response.status_code == 200:
+                print(f"Accessed {url} successfully")
+            else:
+                print(f"Failed to access {url}. Status code: {response.status_code}")
+        except requests.exceptions.RequestException as e:
+            print(f"Failed to access {url}. Exception raised: {e}")
+
+        index = (index + 1) % len(urls)  # Move to the next URL, looping back to the start if at the end
+
+if __name__ == "__main__":
+    filename = "urls.txt"  # Replace with your file name containing URLs
+    urls = read_urls_from_file(filename)
+    access_websites_in_loop(urls)
