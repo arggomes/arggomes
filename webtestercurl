@@ -1,0 +1,32 @@
+import subprocess
+
+def read_urls_from_file(filename):
+    urls = []
+    with open(filename, 'r') as file:
+        for line in file:
+            url = line.strip()
+            if url:
+                urls.append(url)
+    return urls
+
+def access_websites_in_loop_with_curl(urls):
+    index = 0
+    while True:
+        url = urls[index]
+        try:
+            # Using subprocess to execute curl command
+            result = subprocess.run(["curl", "-s", "-o", "/dev/null", "-w", "%{http_code}", url], capture_output=True, text=True)
+            status_code = int(result.stdout.strip())
+            if status_code == 200:
+                print(f"Accessed {url} successfully")
+            else:
+                print(f"Failed to access {url}. Status code: {status_code}")
+        except subprocess.CalledProcessError as e:
+            print(f"Failed to access {url}. Error: {e}")
+
+        index = (index + 1) % len(urls)  # Move to the next URL, looping back to the start if at the end
+
+if __name__ == "__main__":
+    filename = "urls.txt"  # Replace with your file name containing URLs
+    urls = read_urls_from_file(filename)
+    access_websites_in_loop_with_curl(urls)
